@@ -62,7 +62,7 @@ namespace RestaurantApp
                 string rep = "";
 
                 Restaurant newRest = new Restaurant(restName, description, category, imageURL, rep);
-                Server.Transfer("Home.aspx");
+                Response.Redirect("RestaurantPage.aspx?Id=" + restName);
             }
             else if(userType == "Representative")
             {
@@ -73,7 +73,7 @@ namespace RestaurantApp
                 string rep = Session["UserID"].ToString();
 
                 Restaurant newRest = new Restaurant(restName, description, category, imageURL, rep);
-                Server.Transfer("Home.aspx");
+                Response.Redirect("RestaurantPage.aspx?Id=" + restName);
             }
         }
 

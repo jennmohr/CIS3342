@@ -18,7 +18,6 @@
 
         .ratings{
             padding:30px;
-            float:none;
         }
     </style>
 </head>
@@ -76,7 +75,7 @@
                     <div class="card-body">
                         <h3>Reviews</h3>
                         <br />
-                <asp:GridView ID="gvReviews" runat="server" AutoGenerateColumns="False" CssClass="table table-striped">
+                <asp:GridView ID="gvReviews" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" emptydatatext="No reviews were made yet for this Restaurant." ShowHeaderWhenEmpty="True">
                 <Columns>
 
                     <asp:BoundField DataField="UserID" HeaderText="User" />
@@ -101,7 +100,7 @@
                     <div class="card-body">
                         <h3>My Reviews</h3>
                         <br />
-                <asp:GridView ID="gvUserReviews" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" OnRowCommand="gvUserReviews_RowCommand">
+                <asp:GridView ID="gvUserReviews" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" OnRowCommand="gvUserReviews_RowCommand" emptydatatext="You did not make any reviews for this Restaurant." ShowHeaderWhenEmpty="True">
                 <Columns>
 
 
@@ -129,7 +128,7 @@
                     <div class="card-body">
                         <h3>Manage Reservations</h3>
                         <br />
-                <asp:GridView ID="gvReservations" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" OnRowCommand="gvReservations_RowCommand" DataKeyNames="ReservationID">
+                <asp:GridView ID="gvReservations" runat="server" AutoGenerateColumns="False" CssClass="table table-striped" OnRowCommand="gvReservations_RowCommand" DataKeyNames="ReservationID" emptydatatext="No reservations were made yet for this Restaurant." ShowHeaderWhenEmpty="True">
                 <Columns>
 
 
