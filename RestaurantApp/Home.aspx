@@ -51,10 +51,10 @@
             </ul>
             <ul class="nav navbar-nav ml-auto">
                 <li>
-                    <asp:Button runat="server" Text="Log Out" id="btnLogOut" OnClick="btnLogOut_Click" />
+                    <asp:Button runat="server" class="btn-info" Text="Log Out" id="btnLogOut" OnClick="btnLogOut_Click" />
                 </li>
                 <li>
-                    <asp:Button runat="server" Text="Log In" id="btnLogIn" OnClick="btnLogIn_Click" />
+                    <asp:Button runat="server" class="btn-info" Text="Log In" id="btnLogIn" OnClick="btnLogIn_Click" />
                 </li>
             </ul>
         </div>
