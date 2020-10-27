@@ -42,7 +42,7 @@ namespace RestaurantApp
                 userID = Session["UserID"].ToString();
                 btnModifyReviews.Visible = false;
                 btnAddReview.Visible = false;
-                btnMakeReservation.Visible = false;
+                btnMakeReservation.Visible = true;
                 btnLogIn.Visible = false;
 
 
