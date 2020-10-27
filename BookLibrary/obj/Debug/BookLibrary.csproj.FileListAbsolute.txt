@@ -1,0 +1,6 @@
+C:\Users\jenni\source\repos\CIS3342Solution\BookLibrary\bin\Debug\BookLibrary.dll
+C:\Users\jenni\source\repos\CIS3342Solution\BookLibrary\bin\Debug\BookLibrary.pdb
+C:\Users\jenni\source\repos\CIS3342Solution\BookLibrary\obj\Debug\BookLibrary.csprojAssemblyReference.cache
+C:\Users\jenni\source\repos\CIS3342Solution\BookLibrary\obj\Debug\BookLibrary.csproj.CoreCompileInputs.cache
+C:\Users\jenni\source\repos\CIS3342Solution\BookLibrary\obj\Debug\BookLibrary.dll
+C:\Users\jenni\source\repos\CIS3342Solution\BookLibrary\obj\Debug\BookLibrary.pdb

@@ -1,0 +1,9 @@
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\bin\Debug\ReviewClasses.dll
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\bin\Debug\ReviewClasses.pdb
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\bin\Debug\Utilities.dll
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\bin\Debug\Utilities.pdb
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\obj\Debug\ReviewClasses.csprojAssemblyReference.cache
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\obj\Debug\ReviewClasses.csproj.CoreCompileInputs.cache
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\obj\Debug\ReviewClasses.csproj.CopyComplete
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\obj\Debug\ReviewClasses.dll
+C:\Users\jenni\source\repos\CIS3342Solution\ReviewClasses\obj\Debug\ReviewClasses.pdb
