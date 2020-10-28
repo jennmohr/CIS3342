@@ -54,6 +54,44 @@
                 <label for="inputImage"><b>Image:</b></label>
                 <input type="text" class="form-control" id="inputImage" name="inputImage" placeholder="Enter Image URL" runat="server" required/>
              <br />
+                   
+                    <div id="divReview" runat="server" Visible="false">
+                        <p>Because you are a reviewer, you must add a review when creating a new restaurant. Please give the restaurant a review!</p>
+                        <asp:Label ID="lblQuality" runat="server">Enter your rating for Food Quality:</asp:Label>
+               <select class="form-control" id="selectQuality" name="selectQuality" runat="server">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                         <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                </select><br />
+                    <asp:Label ID="lblService" runat="server">Enter your rating for Service:</asp:Label>
+                    <select class="form-control" id="selectService" name="selectService" runat="server">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                         <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                </select><br />
+                    <asp:Label ID="lblAtmosphere" runat="server">Enter your rating for Restaurant Atmosphere:</asp:Label>
+                    <select class="form-control" id="selectAtmosphere" name="selectAtmosphere" runat="server">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                         <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                </select><br />
+                    <asp:Label ID="lblPrice" runat="server">Enter your rating for Price Level:</asp:Label>
+                    <select class="form-control" id="selectPrice" name="selectPrice" runat="server">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                         <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                </select><br />
+                <asp:Label ID="lblComment" runat="server">Enter your review:</asp:Label>
+                    <asp:TextBox ID="txtComment" runat="server" size="50"></asp:TextBox><br /><br />
+                    </div>
             <asp:Button type="button" class="btn btn-info" ID="btnCreateRest" runat="server" Text="Create Restaurant" OnClick="btnCreate_Click" />
             <br />
             </div>

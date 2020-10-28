@@ -14,8 +14,7 @@ namespace RestaurantApp
     public partial class NewAccount : System.Web.UI.Page
     {
 
-        DBConnect objDB = new DBConnect();
-        SqlCommand objCommand = new SqlCommand();
+        SQLHandler procedures = new SQLHandler();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -63,16 +62,7 @@ namespace RestaurantApp
 
         public bool checkUnique(string username)
         {
-            objCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            objCommand.CommandText = "UsernameCheck";
-            SqlParameter userID = new SqlParameter("@userID", username);
-            userID.Direction = System.Data.ParameterDirection.Input;
-            userID.SqlDbType = System.Data.SqlDbType.VarChar;
-            userID.Size = 50;
-            objCommand.Parameters.Add(userID);
-
-            DataSet returnVal = objDB.GetDataSetUsingCmdObj(objCommand);
-            int value = Int32.Parse(returnVal.Tables[0].Rows[0][0].ToString());
+            int value = procedures.uniqueUserValidation(username);
 
             if (value == 1)
                 return false;

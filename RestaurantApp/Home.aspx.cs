@@ -8,12 +8,13 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Utilities;
+using ReviewClasses;
 
 namespace RestaurantApp
 {
     public partial class Home : System.Web.UI.Page
     {
-        DBConnect objDB = new DBConnect();
+        SQLHandler procedures = new SQLHandler();
 
 
         protected void Page_Load(object sender, EventArgs e)
@@ -41,10 +42,7 @@ namespace RestaurantApp
 
             if (!IsPostBack)
             {
-                SqlCommand getRest = new SqlCommand();
-                getRest.CommandType = System.Data.CommandType.StoredProcedure;
-                getRest.CommandText = "GetAllRestaurants";
-                gvHome.DataSource = objDB.GetDataSetUsingCmdObj(getRest);
+                gvHome.DataSource = procedures.getRestaurants();
                 gvHome.DataBind();
 
             }
@@ -70,32 +68,23 @@ namespace RestaurantApp
                 {
                     count++;
                     string category = item.Value;
-                    SqlCommand objCommand = new SqlCommand();
-
-                    objCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                    objCommand.CommandText = "FilterRestaurants";
-                    SqlParameter cat = new SqlParameter("@category", category);
-                    cat.Direction = System.Data.ParameterDirection.Input;
-                    cat.SqlDbType = System.Data.SqlDbType.VarChar;
-                    cat.Size = 50;
-                    objCommand.Parameters.Add(cat);
-
-                    DataSet rests = objDB.GetDataSetUsingCmdObj(objCommand);
+                    DataSet rests = procedures.getFilteredRestaurants(category);
                     restaurants.Merge(rests);
                 }
             }
 
+            
 
-            if(count == 0)
+            if (count == 0)
             {
-                String strSQL = "SELECT * FROM Restaurants ORDER BY RestName ASC";
-
-                gvHome.DataSource = objDB.GetDataSet(strSQL);
+                gvHome.DataSource = procedures.getRestaurants();
                 gvHome.DataBind();
             }
             else
             {
-                gvHome.DataSource = restaurants;
+                DataView dv = new DataView(restaurants.Tables[0]);
+                dv.Sort = "RestName ASC";
+                gvHome.DataSource = dv;
                 gvHome.DataBind();
             }
 

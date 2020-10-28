@@ -14,8 +14,7 @@ namespace RestaurantApp
     public partial class NewRestaurant : System.Web.UI.Page
     {
 
-        DBConnect objDB = new DBConnect();
-        SqlCommand objCommand = new SqlCommand();
+        SQLHandler procedures = new SQLHandler();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,15 +23,17 @@ namespace RestaurantApp
             if (userType == "Reviewer")
             {
                 divAddRep.Visible = false;
+                divReview.Visible = true;
             }else if(userType == "Representative")
             {
                 divAddRep.Visible = true;
+                divReview.Visible = false;
                 showData();
-
             }
             else
             {
                 divAddRest.Visible = false;
+                divReview.Visible = false;
                 lblAlert.Text = "You do not have access to this page. Please login to add restaurant.";
             }
 
@@ -40,11 +41,7 @@ namespace RestaurantApp
 
         protected void showData()
         {
-
-            SqlCommand noRepCommand = new SqlCommand();
-            noRepCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            noRepCommand.CommandText = "GetRestNoReps";
-            gvRep.DataSource = objDB.GetDataSetUsingCmdObj(noRepCommand);
+            gvRep.DataSource = procedures.getRestNoReps();
             gvRep.DataBind();
 
         }
@@ -60,8 +57,16 @@ namespace RestaurantApp
                 string category = Request.Form["selectCategory"];
                 string imageURL = Request.Form["inputImage"];
                 string rep = "";
+                string userID = Session["UserID"].ToString();
 
+                string comment = Request.Form["txtComment"];
+                int service = Int32.Parse(Request.Form["selectService"]);
+                int quality = Int32.Parse(Request.Form["selectQuality"]);
+                int price = Int32.Parse(Request.Form["selectPrice"]);
+                int atmos = Int32.Parse(Request.Form["selectAtmosphere"]);
                 Restaurant newRest = new Restaurant(restName, description, category, imageURL, rep);
+                Review newReview = new Review(restName, comment, service, quality, price, atmos, userID);
+                procedures.addNewReview(newReview);
                 Response.Redirect("RestaurantPage.aspx?Id=" + restName);
             }
             else if(userType == "Representative")
@@ -82,28 +87,10 @@ namespace RestaurantApp
             String representative = Session["UserID"].ToString();
             int rowIndex = int.Parse(e.CommandArgument.ToString());
             String restName = gvRep.Rows[rowIndex].Cells[1].Text;
-
-
-            objCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            objCommand.CommandText = "AddReptoRest";
-            SqlParameter rep = new SqlParameter("@Representative", representative);
-            rep.Direction = System.Data.ParameterDirection.Input;
-            rep.SqlDbType = System.Data.SqlDbType.VarChar;
-            rep.Size = 50;
-            objCommand.Parameters.Add(rep);
-
-            SqlParameter name = new SqlParameter("@RestName", restName);
-            name.Direction = System.Data.ParameterDirection.Input;
-            name.SqlDbType = System.Data.SqlDbType.VarChar;
-            name.Size = 50;
-            objCommand.Parameters.Add(name);
-
-            objDB.DoUpdateUsingCmdObj(objCommand);
+            procedures.addRepToRest(representative, restName);
             showData();
 
             lblAlert.Text = "Representative added to " + restName ;
-
-            
         }
 
         protected void btnLogOut_Click(object sender, EventArgs e)

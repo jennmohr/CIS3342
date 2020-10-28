@@ -7,6 +7,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Utilities;
 using System.Data.SqlClient;
+using ReviewClasses;
 
 namespace RestaurantApp
 {
@@ -14,8 +15,7 @@ namespace RestaurantApp
     {
         string restName = "";
         string userID = "";
-        DBConnect objDB = new DBConnect();
-        SqlCommand objCommand = new SqlCommand();
+        SQLHandler procedures = new SQLHandler();
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -45,18 +45,8 @@ namespace RestaurantApp
                 btnMakeReservation.Visible = true;
                 btnLogIn.Visible = false;
 
+                DataSet represent = procedures.getRepresentative(restName);
 
-                SqlCommand repCommand = new SqlCommand();
-                repCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                repCommand.CommandText = "GetRepresentative";
-
-                SqlParameter rest = new SqlParameter("@restName", restName);
-                rest.Direction = System.Data.ParameterDirection.Input;
-                rest.SqlDbType = System.Data.SqlDbType.VarChar;
-                rest.Size = 50;
-                repCommand.Parameters.Add(rest);
-
-                DataSet represent = objDB.GetDataSetUsingCmdObj(repCommand);
                 if (represent.Tables[0].Rows.Count == 0)
                 {
                     rep = null;
@@ -94,14 +84,7 @@ namespace RestaurantApp
         {
             lblRest.Text = restName;
             inputRestName.Value = restName;
-            objCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            objCommand.CommandText = "GetRestaurant";
-            SqlParameter rest = new SqlParameter("@restName", restName);
-            rest.Direction = System.Data.ParameterDirection.Input;
-            rest.SqlDbType = System.Data.SqlDbType.VarChar;
-            rest.Size = 50;
-            objCommand.Parameters.Add(rest);
-            DataSet restaurant = objDB.GetDataSetUsingCmdObj(objCommand);
+            DataSet restaurant = procedures.loadRestaurant(restName);
             lblDesc.Text = restaurant.Tables[0].Rows[0][1].ToString();
             inputDescription.Value = lblDesc.Text;
             lblCat.Text = restaurant.Tables[0].Rows[0][2].ToString();
@@ -113,16 +96,7 @@ namespace RestaurantApp
 
         protected void loadReviews()
         {
-            SqlCommand reviewsCommand = new SqlCommand();
-            reviewsCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            reviewsCommand.CommandText = "GetReviews";
-            SqlParameter rest = new SqlParameter("@restName", restName);
-            rest.Direction = System.Data.ParameterDirection.Input;
-            rest.SqlDbType = System.Data.SqlDbType.VarChar;
-            rest.Size = 50;
-            reviewsCommand.Parameters.Add(rest);
-
-            gvReviews.DataSource = objDB.GetDataSetUsingCmdObj(reviewsCommand);
+            gvReviews.DataSource = procedures.loadReviews(restName);
             gvReviews.DataBind();
         }
 
@@ -139,56 +113,13 @@ namespace RestaurantApp
 
         public void addReviewToDatabase()
         {
-
             string comment = Request.Form["txtComment"];
             int service = Int32.Parse(Request.Form["selectService"]);
             int quality = Int32.Parse(Request.Form["selectQuality"]);
             int price = Int32.Parse(Request.Form["selectPrice"]);
             int atmos = Int32.Parse(Request.Form["selectAtmosphere"]);
-
-            SqlCommand reviewCommand = new SqlCommand();
-
-            reviewCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            reviewCommand.CommandText = "AddReview";
-            SqlParameter name = new SqlParameter("@restName", restName);
-            name.Direction = System.Data.ParameterDirection.Input;
-            name.SqlDbType = System.Data.SqlDbType.VarChar;
-            name.Size = 50;
-            reviewCommand.Parameters.Add(name);
-
-            SqlParameter review = new SqlParameter("@ReviewComment", comment);
-            review.Direction = System.Data.ParameterDirection.Input;
-            review.SqlDbType = System.Data.SqlDbType.VarChar;
-            review.Size = -1;
-            reviewCommand.Parameters.Add(review);
-
-            SqlParameter servRating = new SqlParameter("@ServiceRating", service);
-            servRating.Direction = System.Data.ParameterDirection.Input;
-            servRating.SqlDbType = System.Data.SqlDbType.Int;
-            reviewCommand.Parameters.Add(servRating);
-
-            SqlParameter qualRating = new SqlParameter("@QualityRating", quality);
-            qualRating.Direction = System.Data.ParameterDirection.Input;
-            qualRating.SqlDbType = System.Data.SqlDbType.Int;
-            reviewCommand.Parameters.Add(qualRating);
-
-            SqlParameter priceRating = new SqlParameter("@PriceRating", price);
-            priceRating.Direction = System.Data.ParameterDirection.Input;
-            priceRating.SqlDbType = System.Data.SqlDbType.Int;
-            reviewCommand.Parameters.Add(priceRating);
-
-            SqlParameter atmosRating = new SqlParameter("@AtmosRating", atmos);
-            atmosRating.Direction = System.Data.ParameterDirection.Input;
-            atmosRating.SqlDbType = System.Data.SqlDbType.Int;
-            reviewCommand.Parameters.Add(atmosRating);
-
-            SqlParameter user = new SqlParameter("@UserID", userID);
-            user.Direction = System.Data.ParameterDirection.Input;
-            user.SqlDbType = System.Data.SqlDbType.VarChar;
-            user.Size = 50;
-            reviewCommand.Parameters.Add(user);
-
-            objDB.DoUpdateUsingCmdObj(reviewCommand);
+            Review rev = new Review(restName, comment, service, quality, price, atmos, userID);
+            procedures.addNewReview(rev);
             reviewList.Visible = true;
             newReview.Visible = false;
             loadReviews();
@@ -199,24 +130,7 @@ namespace RestaurantApp
         {
             reviewList.Visible = false;
             userReviews.Visible = true;
-
-            SqlCommand userReviewsCmd = new SqlCommand();
-            userReviewsCmd.CommandType = System.Data.CommandType.StoredProcedure;
-            userReviewsCmd.CommandText = "GetUserReviews";
-
-            SqlParameter user = new SqlParameter("@userID", userID);
-            user.Direction = System.Data.ParameterDirection.Input;
-            user.SqlDbType = System.Data.SqlDbType.VarChar;
-            user.Size = 50;
-            userReviewsCmd.Parameters.Add(user);
-
-            SqlParameter rest = new SqlParameter("@restName", restName);
-            rest.Direction = System.Data.ParameterDirection.Input;
-            rest.SqlDbType = System.Data.SqlDbType.VarChar;
-            rest.Size = 50;
-            userReviewsCmd.Parameters.Add(rest);
-
-            gvUserReviews.DataSource = objDB.GetDataSetUsingCmdObj(userReviewsCmd);
+            gvUserReviews.DataSource = procedures.getUserReviews(userID, restName);
             String[] ids = new String[1];
             ids[0] = "ReviewID";
             gvUserReviews.DataKeyNames = ids;
@@ -225,17 +139,7 @@ namespace RestaurantApp
 
         protected void getAverages()
         {
-            SqlCommand ratingCommand = new SqlCommand();
-
-            ratingCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            ratingCommand.CommandText = "GetAverageReviews";
-            SqlParameter name = new SqlParameter("@restName", restName);
-            name.Direction = System.Data.ParameterDirection.Input;
-            name.SqlDbType = System.Data.SqlDbType.VarChar;
-            name.Size = 50;
-            ratingCommand.Parameters.Add(name);
-
-            DataSet averages = objDB.GetDataSetUsingCmdObj(ratingCommand);
+            DataSet averages = procedures.getAverages(restName);
             lblAvgService.Text = averages.Tables[0].Rows[0][0].ToString();
             lblAvgQuality.Text = averages.Tables[0].Rows[0][1].ToString();
             lblAvgPrice.Text = averages.Tables[0].Rows[0][2].ToString();
@@ -250,24 +154,7 @@ namespace RestaurantApp
 
             if (e.CommandName == "DeleteReview")
             {
-
-                SqlCommand deleteCommand = new SqlCommand();
-                deleteCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                deleteCommand.CommandText = "DeleteReview";
-
-                SqlParameter ID = new SqlParameter("@reviewID", reviewID);
-                ID.Direction = System.Data.ParameterDirection.Input;
-                ID.SqlDbType = System.Data.SqlDbType.VarChar;
-                ID.Size = 50;
-                deleteCommand.Parameters.Add(ID);
-
-                SqlParameter user = new SqlParameter("@userID", userID);
-                user.Direction = System.Data.ParameterDirection.Input;
-                user.SqlDbType = System.Data.SqlDbType.VarChar;
-                user.Size = 50;
-                deleteCommand.Parameters.Add(user);
-
-                gvReviews.DataSource = objDB.GetDataSetUsingCmdObj(deleteCommand);
+                gvReviews.DataSource = procedures.deleteReview(reviewID, userID);
                 loadReviews();
 
             }
@@ -286,17 +173,7 @@ namespace RestaurantApp
         protected void displayEditBoxes(int reviewID)
         {
 
-            SqlCommand ratingCommand = new SqlCommand();
-
-            ratingCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            ratingCommand.CommandText = "GetReviewFromID";
-            SqlParameter ID = new SqlParameter("@reviewID", reviewID);
-            ID.Direction = System.Data.ParameterDirection.Input;
-            ID.SqlDbType = System.Data.SqlDbType.VarChar;
-            ID.Size = 50;
-            ratingCommand.Parameters.Add(ID);
-
-            DataSet review = objDB.GetDataSetUsingCmdObj(ratingCommand);
+            DataSet review = procedures.getReview(reviewID);
 
             newReview.Visible = true;
             selectQuality.Value = review.Tables[0].Rows[0][3].ToString();
@@ -314,49 +191,7 @@ namespace RestaurantApp
                 int price = Int32.Parse(Request.Form["selectPrice"]);
                 int atmos = Int32.Parse(Request.Form["selectAtmosphere"]);
 
-                SqlCommand updateCommand = new SqlCommand();
-
-                updateCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                updateCommand.CommandText = "UpdateReview";
-
-                SqlParameter ID = new SqlParameter("@reviewID", reviewID);
-                ID.Direction = System.Data.ParameterDirection.Input;
-                ID.SqlDbType = System.Data.SqlDbType.Int;
-                updateCommand.Parameters.Add(ID);
-
-                SqlParameter review = new SqlParameter("@ReviewComment", comment);
-                review.Direction = System.Data.ParameterDirection.Input;
-                review.SqlDbType = System.Data.SqlDbType.VarChar;
-                review.Size = -1;
-                updateCommand.Parameters.Add(review);
-
-                SqlParameter servRating = new SqlParameter("@ServiceRating", service);
-                servRating.Direction = System.Data.ParameterDirection.Input;
-                servRating.SqlDbType = System.Data.SqlDbType.Float;
-                updateCommand.Parameters.Add(servRating);
-
-                SqlParameter qualRating = new SqlParameter("@QualityRating", quality);
-                qualRating.Direction = System.Data.ParameterDirection.Input;
-                qualRating.SqlDbType = System.Data.SqlDbType.Float;
-                updateCommand.Parameters.Add(qualRating);
-
-                SqlParameter priceRating = new SqlParameter("@PriceRating", price);
-                priceRating.Direction = System.Data.ParameterDirection.Input;
-                priceRating.SqlDbType = System.Data.SqlDbType.Float;
-                updateCommand.Parameters.Add(priceRating);
-
-                SqlParameter atmosRating = new SqlParameter("@AtmosRating", atmos);
-                atmosRating.Direction = System.Data.ParameterDirection.Input;
-                atmosRating.SqlDbType = System.Data.SqlDbType.Float;
-                updateCommand.Parameters.Add(atmosRating);
-
-                SqlParameter user = new SqlParameter("@UserID", userID);
-                user.Direction = System.Data.ParameterDirection.Input;
-                user.SqlDbType = System.Data.SqlDbType.VarChar;
-                user.Size = 50;
-                updateCommand.Parameters.Add(user);
-
-                objDB.DoUpdateUsingCmdObj(updateCommand);
+                procedures.updateReview(reviewID, comment, service, quality, price, atmos, userID);
                 reviewList.Visible = true;
                 newReview.Visible = false;
                 loadReviews();
@@ -386,35 +221,8 @@ namespace RestaurantApp
             string time = resTime.ToString("hh:mm tt");
             int partyAmount = Int32.Parse(Request.Form["selectParty"]);
             string name = Request.Form["txtName"];
-
-            SqlCommand reservationCmd = new SqlCommand();
-
-            reservationCmd.CommandType = System.Data.CommandType.StoredProcedure;
-            reservationCmd.CommandText = "AddReservation";
-
-            SqlParameter resDateTime = new SqlParameter("@reservationDateTime", resTime);
-            resDateTime.Direction = System.Data.ParameterDirection.Input;
-            resDateTime.SqlDbType = System.Data.SqlDbType.DateTime;
-            reservationCmd.Parameters.Add(resDateTime);
-
-            SqlParameter partyNum = new SqlParameter("@numInParty", partyAmount);
-            partyNum.Direction = System.Data.ParameterDirection.Input;
-            partyNum.SqlDbType = System.Data.SqlDbType.Int;
-            reservationCmd.Parameters.Add(partyNum);
-
-            SqlParameter reservName = new SqlParameter("@name", name);
-            reservName.Direction = System.Data.ParameterDirection.Input;
-            reservName.SqlDbType = System.Data.SqlDbType.VarChar;
-            reservName.Size = 50;
-            reservationCmd.Parameters.Add(reservName);
-
-            SqlParameter restaurantName = new SqlParameter("@restName", restName);
-            restaurantName.Direction = System.Data.ParameterDirection.Input;
-            restaurantName.SqlDbType = System.Data.SqlDbType.VarChar;
-            restaurantName.Size = 50;
-            reservationCmd.Parameters.Add(restaurantName);
-
-            objDB.DoUpdateUsingCmdObj(reservationCmd);
+            Reservation res = new Reservation(resTime, partyAmount, name, restName);
+            procedures.addNewReservation(res);
 
             lblConfirmation.Text = "Thank you, " + name + "! Your reservation is confirmed for " + date + " at " + time + " for " + partyAmount + " people. Contact the restaurant to change or cancel your reservation.";
             reservation.Visible = false;
@@ -430,16 +238,7 @@ namespace RestaurantApp
 
         protected void loadReservations()
         {
-            SqlCommand resCommand = new SqlCommand();
-            resCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            resCommand.CommandText = "GetReservations";
-            SqlParameter rest = new SqlParameter("@restName", restName);
-            rest.Direction = System.Data.ParameterDirection.Input;
-            rest.SqlDbType = System.Data.SqlDbType.VarChar;
-            rest.Size = 50;
-            resCommand.Parameters.Add(rest);
-
-            gvReservations.DataSource = objDB.GetDataSetUsingCmdObj(resCommand);
+            gvReservations.DataSource = procedures.getReservations(restName);
             String[] ids = new String[1];
             ids[0] = "ReservationID";
             gvUserReviews.DataKeyNames = ids;
@@ -453,30 +252,7 @@ namespace RestaurantApp
 
             if (e.CommandName == "DeleteRes")
             {
-
-                SqlCommand deleteResCommand = new SqlCommand();
-                deleteResCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                deleteResCommand.CommandText = "DeleteReservation";
-
-                SqlParameter ID = new SqlParameter("@reservationID", resID);
-                ID.Direction = System.Data.ParameterDirection.Input;
-                ID.SqlDbType = System.Data.SqlDbType.VarChar;
-                ID.Size = 50;
-                deleteResCommand.Parameters.Add(ID);
-
-                SqlParameter user = new SqlParameter("@userID", userID);
-                user.Direction = System.Data.ParameterDirection.Input;
-                user.SqlDbType = System.Data.SqlDbType.VarChar;
-                user.Size = 50;
-                deleteResCommand.Parameters.Add(user);
-
-                SqlParameter rest = new SqlParameter("@restName", restName);
-                rest.Direction = System.Data.ParameterDirection.Input;
-                rest.SqlDbType = System.Data.SqlDbType.VarChar;
-                rest.Size = 50;
-                deleteResCommand.Parameters.Add(rest);
-
-                gvReviews.DataSource = objDB.GetDataSetUsingCmdObj(deleteResCommand);
+                gvReviews.DataSource = procedures.deleteReservation(resID, userID, restName); 
                 loadReservations();
                 reviewList.Visible = false;
 
@@ -493,17 +269,7 @@ namespace RestaurantApp
 
         protected void displayResEditBoxes(int resID)
         {
-            SqlCommand getResCommand = new SqlCommand();
-
-            getResCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            getResCommand.CommandText = "GetResFromID";
-            SqlParameter ID = new SqlParameter("@resID", resID);
-            ID.Direction = System.Data.ParameterDirection.Input;
-            ID.SqlDbType = System.Data.SqlDbType.VarChar;
-            ID.Size = 50;
-            getResCommand.Parameters.Add(ID);
-
-            DataSet res = objDB.GetDataSetUsingCmdObj(getResCommand);
+            DataSet res = procedures.getReservation(resID);
 
             reservation.Visible = true;
             txtName.Value = res.Tables[0].Rows[0][3].ToString();
@@ -524,49 +290,7 @@ namespace RestaurantApp
             string resName = Request.Form["txtName"];
             int party = Int32.Parse(Request.Form["selectParty"]);
             DateTime resTime = DateTime.Parse(Request.Form["resDateTime"]);
-
-
-            SqlCommand updateResCommand = new SqlCommand();
-
-            updateResCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            updateResCommand.CommandText = "UpdateReservation";
-
-            SqlParameter ID = new SqlParameter("@resID", resID);
-            ID.Direction = System.Data.ParameterDirection.Input;
-            ID.SqlDbType = System.Data.SqlDbType.VarChar;
-            ID.Size = 50;
-            updateResCommand.Parameters.Add(ID);
-
-            SqlParameter user = new SqlParameter("@userID", userID);
-            user.Direction = System.Data.ParameterDirection.Input;
-            user.SqlDbType = System.Data.SqlDbType.VarChar;
-            user.Size = 50;
-            updateResCommand.Parameters.Add(user);
-
-            SqlParameter rest = new SqlParameter("@restName", restName);
-            rest.Direction = System.Data.ParameterDirection.Input;
-            rest.SqlDbType = System.Data.SqlDbType.VarChar;
-            rest.Size = 50;
-            updateResCommand.Parameters.Add(rest);
-
-            SqlParameter timeRes = new SqlParameter("@resDateTime", resTime);
-            timeRes.Direction = System.Data.ParameterDirection.Input;
-            timeRes.SqlDbType = System.Data.SqlDbType.DateTime;
-            updateResCommand.Parameters.Add(timeRes);
-
-            SqlParameter num = new SqlParameter("@numParty", party);
-            num.Direction = System.Data.ParameterDirection.Input;
-            num.SqlDbType = System.Data.SqlDbType.Int;
-            updateResCommand.Parameters.Add(num);
-
-            SqlParameter name = new SqlParameter("@resName", resName);
-            name.Direction = System.Data.ParameterDirection.Input;
-            name.SqlDbType = System.Data.SqlDbType.VarChar;
-            name.Size = 50;
-            updateResCommand.Parameters.Add(name);
-
-            objDB.DoUpdateUsingCmdObj(updateResCommand);
-
+            procedures.updateReservation(resID, userID, restName, resTime, party, resName);
 
             loadReservations();
             divManageReservations.Visible = true;
@@ -587,43 +311,7 @@ namespace RestaurantApp
             string image = Request.Form["inputImage"];
             string cat = Request.Form["selectCategory"];
 
-
-            SqlCommand updateRestCommand = new SqlCommand();
-
-            updateRestCommand.CommandType = System.Data.CommandType.StoredProcedure;
-            updateRestCommand.CommandText = "UpdateRestaurant";
-
-            SqlParameter rest = new SqlParameter("@restName", restName);
-            rest.Direction = System.Data.ParameterDirection.Input;
-            rest.SqlDbType = System.Data.SqlDbType.VarChar;
-            rest.Size = 50;
-            updateRestCommand.Parameters.Add(rest);
-
-            SqlParameter description = new SqlParameter("@desc", desc);
-            description.Direction = System.Data.ParameterDirection.Input;
-            description.SqlDbType = System.Data.SqlDbType.VarChar;
-            description.Size = -1;
-            updateRestCommand.Parameters.Add(description);
-
-            SqlParameter user = new SqlParameter("@userID", userID);
-            user.Direction = System.Data.ParameterDirection.Input;
-            user.SqlDbType = System.Data.SqlDbType.VarChar;
-            user.Size = 50;
-            updateRestCommand.Parameters.Add(user);
-
-            SqlParameter category = new SqlParameter("@category", cat);
-            category.Direction = System.Data.ParameterDirection.Input;
-            category.SqlDbType = System.Data.SqlDbType.VarChar;
-            category.Size = 50;
-            updateRestCommand.Parameters.Add(category);
-
-            SqlParameter imageurl = new SqlParameter("@imageURL", image);
-            imageurl.Direction = System.Data.ParameterDirection.Input;
-            imageurl.SqlDbType = System.Data.SqlDbType.VarChar;
-            imageurl.Size = -1;
-            updateRestCommand.Parameters.Add(imageurl);
-
-            objDB.DoUpdateUsingCmdObj(updateRestCommand);
+            procedures.updateRestaurant(restName, desc, userID, cat, image);
 
             Response.Redirect(Request.Url.AbsoluteUri);
         }

@@ -7,13 +7,15 @@ using System.Web.UI.WebControls;
 using Utilities;
 using System.Data.SqlClient;
 using System.Data;
+using ReviewClasses;
 
 namespace RestaurantApp
 {
     public partial class Login : System.Web.UI.Page
     {
-        DBConnect objDB = new DBConnect();
-        SqlCommand objCommand = new SqlCommand();
+
+        SQLHandler procedures = new SQLHandler();
+
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -21,7 +23,6 @@ namespace RestaurantApp
                 Session.Add("UserType", null);
                 Session.Add("UserID", null);
             }
-
 
         }
 
@@ -37,23 +38,7 @@ namespace RestaurantApp
             }
             else
             {
-
-                objCommand.CommandType = System.Data.CommandType.StoredProcedure;
-                objCommand.CommandText = "ValidateLogin";
-                SqlParameter userID = new SqlParameter("@userID", username);
-                userID.Direction = System.Data.ParameterDirection.Input;
-                userID.SqlDbType = System.Data.SqlDbType.VarChar;
-                userID.Size = 50;
-                objCommand.Parameters.Add(userID);
-
-                SqlParameter userType = new SqlParameter("@userType", type);
-                userType.Direction = System.Data.ParameterDirection.Input;
-                userType.SqlDbType = System.Data.SqlDbType.VarChar;
-                userType.Size = 50;
-                objCommand.Parameters.Add(userType);
-
-                DataSet returnVal = objDB.GetDataSetUsingCmdObj(objCommand);
-                int value = Int32.Parse(returnVal.Tables[0].Rows[0][0].ToString());
+                int value = procedures.loginValidation(username, type);
 
                 if (value == 1)
                 {
