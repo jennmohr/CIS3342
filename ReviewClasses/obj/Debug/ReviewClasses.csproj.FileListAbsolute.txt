@@ -16,3 +16,12 @@ C:\Users\jenni\Documents\GitHub\CIS3342\ReviewClasses\obj\Debug\ReviewClasses.cs
 C:\Users\jenni\Documents\GitHub\CIS3342\ReviewClasses\obj\Debug\ReviewClasses.csproj.CopyComplete
 C:\Users\jenni\Documents\GitHub\CIS3342\ReviewClasses\obj\Debug\ReviewClasses.dll
 C:\Users\jenni\Documents\GitHub\CIS3342\ReviewClasses\obj\Debug\ReviewClasses.pdb
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\bin\Debug\ReviewClasses.dll
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\bin\Debug\ReviewClasses.pdb
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\bin\Debug\Utilities.dll
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\bin\Debug\Utilities.pdb
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\obj\Debug\ReviewClasses.csprojAssemblyReference.cache
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\obj\Debug\ReviewClasses.csproj.CoreCompileInputs.cache
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\obj\Debug\ReviewClasses.csproj.CopyComplete
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\obj\Debug\ReviewClasses.dll
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\ReviewClasses\obj\Debug\ReviewClasses.pdb

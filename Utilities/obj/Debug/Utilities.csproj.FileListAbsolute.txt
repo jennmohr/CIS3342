@@ -10,3 +10,9 @@ C:\Users\jenni\Documents\GitHub\CIS3342\Utilities\obj\Debug\Utilities.csprojAsse
 C:\Users\jenni\Documents\GitHub\CIS3342\Utilities\obj\Debug\Utilities.csproj.CoreCompileInputs.cache
 C:\Users\jenni\Documents\GitHub\CIS3342\Utilities\obj\Debug\Utilities.dll
 C:\Users\jenni\Documents\GitHub\CIS3342\Utilities\obj\Debug\Utilities.pdb
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\Utilities\bin\Debug\Utilities.dll
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\Utilities\bin\Debug\Utilities.pdb
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\Utilities\obj\Debug\Utilities.csprojAssemblyReference.cache
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\Utilities\obj\Debug\Utilities.csproj.CoreCompileInputs.cache
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\Utilities\obj\Debug\Utilities.dll
+C:\Users\jenni\Documents\GitHub\CIS3342Mohr\Utilities\obj\Debug\Utilities.pdb

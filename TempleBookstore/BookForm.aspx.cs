@@ -131,7 +131,7 @@ namespace TempleBookstore
 
             for (int row = 0; row < gvOrder.Rows.Count; row++)
             {
-                total += Decimal.Parse(gvOrder.Rows[row].Cells[6].Text);
+                total += (Int32.Parse(gvOrder.Rows[row].Cells[5].Text) * Decimal.Parse(gvOrder.Rows[row].Cells[6].Text));
             }
 
 
